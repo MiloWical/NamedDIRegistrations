@@ -4,18 +4,21 @@ using System.Text;
 
 namespace NamedDIRegistrations.Tests.TestObjects
 {
-    public class TestObjectA : ITestObject
+    public class TestObjectB : ITestObject
     {
         public DateTime CreationTimestamp { get; }
 
-        public TestObjectA()
+        public string Message { get; }
+
+        public TestObjectB(string message)
         {
             CreationTimestamp = DateTime.Now;
+            Message = message;
         }
 
         public override string ToString()
         {
-            return GetType().FullName + " " + CreationTimestamp;
+            return $"{Message} [{CreationTimestamp}]";
         }
     }
 }
