@@ -24,7 +24,7 @@
         {
             var registrations = provider.GetServices<INamedRegistration>();
 
-            var registration = registrations.FirstOrDefault(reg=> reg.Name == name && reg.ServiceType == serviceType);
+            var registration = registrations.FirstOrDefault(reg => reg.Name == name && reg.ServiceType == serviceType);
 
             if (registration != null)
                 return registration.GetInstance(provider);

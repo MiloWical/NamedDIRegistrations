@@ -13,7 +13,7 @@ namespace NamedDIRegistrations.Tests
     using TestObjects;
 
     [TestClass]
-    public class RegistrationTests
+    public class TransientRegistrationTests
     {
         [TestMethod]
         public void TestMethod1()

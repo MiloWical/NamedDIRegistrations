@@ -11,7 +11,7 @@
 
         public Func<object> Constructor { get; }
 
-        private Lazy<object> _instance;
+        private readonly Lazy<object> _instance;
 
         public NamedTypeRegistration(string name, Type serviceType, Type type)
         {
@@ -20,13 +20,10 @@
             Type = type ?? throw new ArgumentNullException(nameof(type));
             Constructor = () => Type.GetConstructor(new Type[0])?.Invoke(new object[0]);
 
-            _instance = null;
+            _instance = new Lazy<object>(Constructor);
         }
         public object GetInstance(IServiceProvider provider)
         {
-            if(_instance == null)
-                _instance = new Lazy<object>(Constructor);
-
             return _instance.Value;
         }
     }

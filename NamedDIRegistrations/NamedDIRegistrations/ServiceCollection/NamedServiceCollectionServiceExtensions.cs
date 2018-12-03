@@ -42,7 +42,7 @@
                 throw new ArgumentNullException(nameof(implementationType));
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
-            return NamedServiceCollectionServiceExtensions.AddNamedType(services, serviceType, implementationType, ServiceLifetime.Transient, name);
+            return AddNamedType(services, serviceType, implementationType, ServiceLifetime.Transient, name);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@
                 throw new ArgumentNullException(nameof(serviceType));
             if (implementationFactory == null)
                 throw new ArgumentNullException(nameof(implementationFactory));
-            return NamedServiceCollectionServiceExtensions.AddNamedFactory(services, serviceType, implementationFactory, ServiceLifetime.Transient, name);
+            return AddNamedFactory(services, serviceType, implementationFactory, ServiceLifetime.Transient, name);
         }
 
         /// <summary>
@@ -294,49 +294,49 @@
         //    return services.AddScoped(typeof(TService), (Func<IServiceProvider, object>)implementationFactory);
         //}
 
-        ///// <summary>
-        ///// Adds a singleton service of the type specified in <paramref name="serviceType" /> with an
-        ///// implementation of the type specified in <paramref name="implementationType" /> to the
-        ///// specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
-        ///// </summary>
-        ///// <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add the service to.</param>
-        ///// <param name="serviceType">The type of the service to register.</param>
-        ///// <param name="implementationType">The implementation type of the service.</param>
-        ///// <returns>A reference to this instance after the operation has completed.</returns>
-        ///// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
-        //public static IServiceCollection AddSingleton(this IServiceCollection services, Type serviceType, Type implementationType)
-        //{
-        //    if (services == null)
-        //        throw new ArgumentNullException(nameof(services));
-        //    if (serviceType == (Type)null)
-        //        throw new ArgumentNullException(nameof(serviceType));
-        //    if (implementationType == (Type)null)
-        //        throw new ArgumentNullException(nameof(implementationType));
-        //    //return NamedServiceCollectionServiceExtensions.Add(services, serviceType, implementationType, ServiceLifetime.Singleton);
-        //    return null;
-        //}
+        /// <summary>
+        /// Adds a singleton service of the type specified in <paramref name="serviceType" /> with an
+        /// implementation of the type specified in <paramref name="implementationType" /> to the
+        /// specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+        /// </summary>
+        /// <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add the service to.</param>
+        /// <param name="serviceType">The type of the service to register.</param>
+        /// <param name="implementationType">The implementation type of the service.</param>
+        /// <param name="name">The registration name.</param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
+        /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
+        public static IServiceCollection AddNamedSingleton(this IServiceCollection services, Type serviceType, Type implementationType, string name)
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+            if (serviceType == (Type)null)
+                throw new ArgumentNullException(nameof(serviceType));
+            if (implementationType == (Type)null)
+                throw new ArgumentNullException(nameof(implementationType));
+            return AddNamedType(services, serviceType, implementationType, ServiceLifetime.Singleton, name);
+        }
 
-        ///// <summary>
-        ///// Adds a singleton service of the type specified in <paramref name="serviceType" /> with a
-        ///// factory specified in <paramref name="implementationFactory" /> to the
-        ///// specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
-        ///// </summary>
-        ///// <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add the service to.</param>
-        ///// <param name="serviceType">The type of the service to register.</param>
-        ///// <param name="implementationFactory">The factory that creates the service.</param>
-        ///// <returns>A reference to this instance after the operation has completed.</returns>
-        ///// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
-        //public static IServiceCollection AddSingleton(this IServiceCollection services, Type serviceType, Func<IServiceProvider, object> implementationFactory)
-        //{
-        //    if (services == null)
-        //        throw new ArgumentNullException(nameof(services));
-        //    if (serviceType == (Type)null)
-        //        throw new ArgumentNullException(nameof(serviceType));
-        //    if (implementationFactory == null)
-        //        throw new ArgumentNullException(nameof(implementationFactory));
-        //    //return NamedServiceCollectionServiceExtensions.Add(services, serviceType, implementationFactory, ServiceLifetime.Singleton);
-        //    return null;
-        //}
+        /// <summary>
+        /// Adds a singleton service of the type specified in <paramref name="serviceType" /> with a
+        /// factory specified in <paramref name="implementationFactory" /> to the
+        /// specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+        /// </summary>
+        /// <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add the service to.</param>
+        /// <param name="serviceType">The type of the service to register.</param>
+        /// <param name="implementationFactory">The factory that creates the service.</param>
+        /// <param name="name">The registration name.</param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
+        /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
+        public static IServiceCollection AddNamedSingleton(this IServiceCollection services, Type serviceType, Func<IServiceProvider, object> implementationFactory, string name)
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+            if (serviceType == (Type)null)
+                throw new ArgumentNullException(nameof(serviceType));
+            if (implementationFactory == null)
+                throw new ArgumentNullException(nameof(implementationFactory));
+            return AddNamedInstance(services, serviceType, implementationFactory, ServiceLifetime.Singleton, name);
+        }
 
         ///// <summary>
         ///// Adds a singleton service of the type specified in <typeparamref name="TService" /> with an
@@ -493,6 +493,16 @@
 
             AddNamedRegistration(collection, provider => namedFactory, lifetime,
                 name);
+            return collection;
+        }
+
+        private static IServiceCollection AddNamedInstance(IServiceCollection collection, Type serviceType,
+            Func<IServiceProvider, object> implementationFactory, ServiceLifetime lifetime, string name)
+        {
+            var namedInstance = new NamedInstanceRegistration(name, serviceType, implementationFactory);
+
+            AddNamedRegistration(collection, provider => namedInstance, lifetime, name);
+
             return collection;
         }
 
